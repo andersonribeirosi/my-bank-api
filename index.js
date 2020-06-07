@@ -12,14 +12,34 @@ app.get('/', (req, res) => {
 app.post('/account', (req, res) => {
   let params = req.body;
   // console.log('Parou aqui'); //breakpoint - mostra todos os métodos do req, res(requisições, headers)
-  res.send(`Nome: ${params.name} Idade: ${params.age}`); // Retorno dos valores contidos no body
+  console.log("Post Account!");
+
+
+  // Lendo o arquivo JSON
+  fs.readFile('accounts.json', 'utf8', (err, data) => {
+
+    console.log(err);
+
+    try {
+      let json = JSON.parse(data);
+      console.log(json);
+
+      res.send('Post account!')
+    } catch (err) {
+      res.send("erro");
+    }
+  })
 
   // Criando o arquivo accounts.json e preenchendo com os valores do método post
   // writeFile cria um novo arquivo e sobrescreve o antigo
-  fs.writeFile('accounts.json', JSON.stringify(params), err => {
-    console.log(err);
+  /* appendFile concatena a nova requisição ao json antigo (não sobrescreve) - 
+  Necessita uma abordagem para o correto armazenamento da listagemdos dados */
+  // fs.appendFile('accounts.json', JSON.stringify(params), err => {
+  //   console.log(err);
+  // })
 
-  })
+  // res.send(`Nome: ${params.name} Idade: ${params.age}`); // Retorno dos valores contidos no body
+  // res.send('Post account')
 })
 
 app.listen(port, () => {
