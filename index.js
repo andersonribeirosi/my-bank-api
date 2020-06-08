@@ -18,8 +18,6 @@ app.post('/account', (req, res) => {
   // Lendo o arquivo JSON
   fs.readFile('accounts.json', 'utf8', (err, data) => {
 
-    console.log(err);
-
     try {
       let json = JSON.parse(data);
       console.log(json);
@@ -43,5 +41,25 @@ app.post('/account', (req, res) => {
 })
 
 app.listen(port, () => {
+  // Leitura do arquivo
+  try {
+    fs.readFile('accounts.json', 'utf8', (err, data) => {
+      // Se não existir, cria o arquivo com a estrutura do JSON
+      if (err) {
+        const initialJson = {
+          nextId: 1,
+          accounts: []
+        };
+        // Se existir, faz a leitura 
+        fs.writeFile('accounts.json', JSON.stringify(initialJson), (err) => {
+          console.log(err);
+        })
+      }
+    })
+  } catch (error) {
+    console.log(err);
+
+  }
+
   console.log("API started!");
 })

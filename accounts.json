@@ -1,6 +1,1 @@
-{
-  "accounts": [
-    { "id": 1, "name": "Anderson Ribeiro", "age": 36 },
-    { "id": 2, "name": "Juliana Borges", "age": 36 }
-  ]
-}
+{"nextId":1,"accounts":[]}
