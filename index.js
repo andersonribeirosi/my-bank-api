@@ -10,23 +10,35 @@ app.get('/', (req, res) => {
 })
 
 app.post('/account', (req, res) => {
-  let params = req.body;
+  let account = req.body;
   // console.log('Parou aqui'); //breakpoint - mostra todos os métodos do req, res(requisições, headers)
   console.log("Post Account!");
 
 
   // Lendo o arquivo JSON
   fs.readFile('accounts.json', 'utf8', (err, data) => {
+    if (!err) {
+      try {
+        let json = JSON.parse(data);
+        account = { id: json.nextId++, ...account };
+        json.accounts.push(account);
 
-    try {
-      let json = JSON.parse(data);
-      console.log(json);
+        fs.writeFile('accounts.json', JSON.stringify(json), err => {
+          if (err) {
+            res.status(400).send({ error: err.message });
+          } else {
+            res.end();
+          }
+        });
 
-      res.send('Post account!')
-    } catch (err) {
-      res.send("erro");
+      } catch (err) {
+        res.status(400).send({ error: err.message });
+      }
+    } else {
+      console.log('Erro na leitura');
+      res.status(400).send({ error: err.message });
     }
-  })
+  });
 
   // Criando o arquivo accounts.json e preenchendo com os valores do método post
   // writeFile cria um novo arquivo e sobrescreve o antigo
@@ -50,15 +62,16 @@ app.listen(port, () => {
           nextId: 1,
           accounts: []
         };
-        // Se existir, faz a leitura 
+        // Se existir, faz escrita
         fs.writeFile('accounts.json', JSON.stringify(initialJson), (err) => {
-          console.log(err);
-        })
+          if (err) {
+            console.log(err);
+          }
+        });
       }
-    })
+    });
   } catch (error) {
     console.log(err);
-
   }
 
   console.log("API started!");
