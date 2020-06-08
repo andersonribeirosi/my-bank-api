@@ -9,6 +9,19 @@ app.get('/', (req, res) => {
   res.send('Api pronta para consumo!');
 })
 
+app.get('/account', (req, res) => {
+  fs.readFile('accounts.json', 'utf8', (err, data) => {
+
+    if (!err) {
+      let json = JSON.parse(data);
+      delete json.nextId;
+      res.send(json);
+    } else {
+      res.status(400).send({ error: err.message });
+    }
+  });
+});
+
 app.post('/account', (req, res) => {
   let account = req.body;
   // console.log('Parou aqui'); //breakpoint - mostra todos os métodos do req, res(requisições, headers)
@@ -51,6 +64,7 @@ app.post('/account', (req, res) => {
   // res.send(`Nome: ${params.name} Idade: ${params.age}`); // Retorno dos valores contidos no body
   // res.send('Post account')
 })
+
 
 app.listen(port, () => {
   // Leitura do arquivo
